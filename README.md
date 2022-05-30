@@ -10,7 +10,6 @@ Hello world! 🚀
 - Lifecycle Component
 - Recycler View + Diffutils
 - DI Dagger - Hilt
-- Chucker for Profiling Network
 - **MVVM Based**
 - Material Design Based
 ### Third party
