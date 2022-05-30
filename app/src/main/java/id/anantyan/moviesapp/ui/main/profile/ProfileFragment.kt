@@ -72,7 +72,9 @@ class ProfileFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
         binding.fabSetPassword.setOnClickListener {
             requireContext().dialog().dialogSetPassword { item, dialog ->
-                viewModel.setPassword(item)
+                item.password?.let {
+                    viewModel.setPassword(it)
+                }
                 dialog.dismiss()
             }
         }

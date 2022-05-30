@@ -49,10 +49,10 @@ class FavoriteFragment : Fragment() {
         binding.rvFavorites.itemAnimator = DefaultItemAnimator()
         binding.rvFavorites.isNestedScrollingEnabled = true
         binding.rvFavorites.addItemDecoration(dividerVertical(requireContext(), 32, 32))
-        adapter.onClick { _, id ->
+        adapter.onClick { _, movieId ->
             val destination = FavoriteFragmentDirections.actionFavoriteFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
-            sharedViewModel.movieId(id)
+            sharedViewModel.movieId(movieId)
         }
     }
 

@@ -94,11 +94,9 @@ class RegisterFragment : Fragment() {
 
     private val onSignUp = object : Validator.OnValidateListener {
         override fun onValidateSuccess(values: List<String>) {
-            val item = UsersLocal(
-                email = binding.txtInputEmail.text.toString(),
-                password = binding.txtInputPassword.text.toString()
-            )
-            viewModel.register(item)
+            val email = binding.txtInputEmail.text.toString()
+            val password = binding.txtInputPassword.text.toString()
+            viewModel.register(email, password)
         }
 
         override fun onValidateFailed(errors: List<String>) {}

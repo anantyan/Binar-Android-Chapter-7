@@ -28,16 +28,16 @@ class FavoriteAdapter @Inject constructor(
         init {
             itemView.setOnClickListener {
                 _onClick?.let {
-                    it(adapterPosition, getItem(adapterPosition).id!!)
+                    it(adapterPosition, getItem(adapterPosition).movieId!!)
                 }
             }
             binding.btnFavorite.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    if (localRepository.checkMovies(getItem(adapterPosition).id!!)) {
+                    if (localRepository.checkMovies(getItem(adapterPosition).movieId!!)) {
                         localRepository.insertMovies(getItem(adapterPosition))
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_24)
                     } else {
-                        localRepository.deleteMovies(getItem(adapterPosition))
+                        localRepository.deleteMovies(getItem(adapterPosition).movieId!!)
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_border_24)
                     }
                 }
@@ -57,7 +57,7 @@ class FavoriteAdapter @Inject constructor(
                 size(ViewSizeResolver(binding.imgPosterPath))
             }
             CoroutineScope(Dispatchers.Main).launch {
-                if (localRepository.checkMovies(item.id!!)) {
+                if (localRepository.checkMovies(item.movieId!!)) {
                     binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_border_24)
                 } else {
                     binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_24)

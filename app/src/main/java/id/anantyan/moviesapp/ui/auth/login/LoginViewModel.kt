@@ -19,9 +19,9 @@ class LoginViewModel @Inject constructor(
     private val _login: LiveEvent<Resource<UsersLocal>> = LiveEvent()
     val login: LiveData<Resource<UsersLocal>> = _login
 
-    fun login(item: UsersLocal) = CoroutineScope(Dispatchers.IO).launch {
+    fun login(email: String, password: String) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = localRepository.login(item)
+            val response = localRepository.login(email, password)
             if (response != null) {
                 _login.postValue(Resource.Success(response))
             } else {

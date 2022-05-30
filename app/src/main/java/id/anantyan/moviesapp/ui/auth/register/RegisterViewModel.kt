@@ -19,11 +19,11 @@ class RegisterViewModel @Inject constructor(
     private val _register: LiveEvent<Resource<Long>> = LiveEvent()
     val register: LiveData<Resource<Long>> = _register
 
-    fun register(item: UsersLocal) = CoroutineScope(Dispatchers.IO).launch {
+    fun register(email: String, password: String) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            val check = localRepository.checkAccount(item)
+            val check = localRepository.checkAccountByEmail(email)
             if (check == null) {
-                val response = localRepository.register(item)
+                val response = localRepository.register(email, password)
                 if (response != 0L) {
                     _register.postValue(Resource.Success(response, "Akun berhasil dibuat!"))
                 } else {

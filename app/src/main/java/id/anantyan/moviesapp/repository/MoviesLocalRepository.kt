@@ -17,20 +17,10 @@ class MoviesLocalRepository @Inject constructor(
             posterPath = item.posterPath,
             releaseDate = item.releaseDate,
             voteAverage = item.voteAverage,
-            id = item.id
+            movieId = item.movieId
         )
     )
-    suspend fun deleteMovies(item: MoviesLocal) = moviesDao.deleteMovies(
-        MoviesLocal(
-            userId = store.getUserId(),
-            overview = item.overview,
-            title = item.title,
-            posterPath = item.posterPath,
-            releaseDate = item.releaseDate,
-            voteAverage = item.voteAverage,
-            id = item.id
-        )
-    )
-    suspend fun checkMovies(id: Int) = moviesDao.checkMovies(id, store.getUserId()) == null
+    suspend fun deleteMovies(movieId: Int) = moviesDao.deleteMovies(movieId, store.getUserId())
+    suspend fun checkMovies(movieId: Int) = moviesDao.checkMovies(movieId, store.getUserId()) == null
     fun selectMovies() = moviesDao.selectMovies(store.getUserId())
 }

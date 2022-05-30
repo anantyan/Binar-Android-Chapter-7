@@ -10,10 +10,15 @@ class UsersLocalRepository @Inject constructor(
     private val store: DataStoreManager
 ) {
     suspend fun getAccount() = usersDao.showAccount(store.getUserId())
-    suspend fun setPassword(item: UsersLocal) = usersDao.setPassword(store.getUserId(), item.password)
+    suspend fun setPassword(password: String) = usersDao.setPassword(store.getUserId(), password)
     suspend fun setProfile(item: UsersLocal) = usersDao.setProfile(store.getUserId(), item.fullname, item.username, item.email)
     suspend fun setPhoto(urlPhoto: String) = usersDao.setPhoto(store.getUserId(), urlPhoto)
-    suspend fun login(item: UsersLocal) = usersDao.login(item.email, item.password)
-    suspend fun register(item: UsersLocal) = usersDao.register(item)
-    suspend fun checkAccount(item: UsersLocal) = usersDao.checkAccount(null, item.email)
+    suspend fun login(email: String, password: String) = usersDao.login(email, password)
+    suspend fun register(email: String, password: String) = usersDao.register(
+        UsersLocal(
+            email = email,
+            password = password
+        )
+    )
+    suspend fun checkAccountByEmail(email: String) = usersDao.checkAccount(null, email)
 }

@@ -170,6 +170,6 @@ class HomeDetailFragment : Fragment() {
         posterPath = this.posterPath,
         releaseDate = this.releaseDate,
         voteAverage = this.voteAverage,
-        id = this.id
+        movieId = this.id
     )
 }

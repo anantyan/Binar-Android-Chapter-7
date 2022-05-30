@@ -96,11 +96,9 @@ class LoginFragment : Fragment() {
 
     private val onSignIn = object : Validator.OnValidateListener {
         override fun onValidateSuccess(values: List<String>) {
-            val item = UsersLocal(
-                email = binding.txtInputEmail.text.toString(),
-                password = binding.txtInputPassword.text.toString()
-            )
-            viewModel.login(item)
+            val email = binding.txtInputEmail.text.toString()
+            val password = binding.txtInputPassword.text.toString()
+            viewModel.login(email, password)
         }
 
         override fun onValidateFailed(errors: List<String>) {}

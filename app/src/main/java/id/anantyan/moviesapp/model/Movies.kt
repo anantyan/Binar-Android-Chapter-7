@@ -27,9 +27,6 @@ data class Movies(
 @Parcelize
 data class ResultsItem(
 
-    @ColumnInfo(name = "user_id")
-    val userId: Int? = null,
-
     @SerializedName("overview")
     val overview: String? = null,
 

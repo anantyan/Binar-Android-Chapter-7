@@ -81,9 +81,9 @@ class ProfileViewModel @Inject constructor(
             )
         }
     }
-    fun setPassword(item: UsersLocal) = CoroutineScope(Dispatchers.IO).launch {
+    fun setPassword(password: String) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            localRepository.setPassword(item)
+            localRepository.setPassword(password)
             _setPassword.postValue(Resource.Success("Berhasil mengubah password!"))
         } catch (ex: Exception) {
             _setPassword.postValue(

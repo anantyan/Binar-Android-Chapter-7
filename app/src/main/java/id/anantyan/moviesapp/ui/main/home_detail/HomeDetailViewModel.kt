@@ -75,17 +75,17 @@ class HomeDetailViewModel @Inject constructor(
     }
 
     fun checkFavorite(item: MoviesLocal) = CoroutineScope(Dispatchers.IO).launch {
-        if (!localRepository.checkMovies(item.id!!)) {
-            localRepository.deleteMovies(item)
-            _checkFavoriteResponse.postValue(Resource.Success(false))
-        } else {
+        if (localRepository.checkMovies(item.movieId!!)) {
             localRepository.insertMovies(item)
             _checkFavoriteResponse.postValue(Resource.Success(true))
+        } else {
+            localRepository.deleteMovies(item.movieId!!)
+            _checkFavoriteResponse.postValue(Resource.Success(false))
         }
     }
 
     fun checkIconFavorite(item: MoviesLocal) = CoroutineScope(Dispatchers.IO).launch {
-        if (localRepository.checkMovies(item.id!!)) {
+        if (localRepository.checkMovies(item.movieId!!)) {
             _checkFavoriteResponse.postValue(Resource.Success(false))
         } else {
             _checkFavoriteResponse.postValue(Resource.Success(true))

@@ -6,14 +6,14 @@ import id.anantyan.moviesapp.data.local.model.MoviesLocal
 
 @Dao
 interface MoviesDao {
-    @Delete
-    suspend fun deleteMovies(item: MoviesLocal)
+    @Query("DELETE FROM tbl_movies WHERE movie_id=:movieId AND user_id=:usrId")
+    suspend fun deleteMovies(movieId: Int?, usrId: Int?)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertMovies(item: MoviesLocal): Long
 
-    @Query("SELECT * FROM tbl_movies WHERE id=:id AND user_id=:usrId")
-    suspend fun checkMovies(id: Int?, usrId: Int?): MoviesLocal?
+    @Query("SELECT * FROM tbl_movies WHERE movie_id=:movieId AND user_id=:usrId")
+    suspend fun checkMovies(movieId: Int?, usrId: Int?): MoviesLocal?
 
     @Query("SELECT * FROM tbl_movies WHERE user_id=:id")
     fun selectMovies(id: Int?): LiveData<List<MoviesLocal>?>

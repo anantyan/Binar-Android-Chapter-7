@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "tbl_movies")
 data class MoviesLocal(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Int? = null,
 
     @ColumnInfo(name = "user_id")
     val userId: Int? = null,
@@ -25,7 +28,6 @@ data class MoviesLocal(
     @ColumnInfo(name = "vote_average")
     val voteAverage: Double? = null,
 
-    @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(name = "id")
-    val id: Int? = null
+    @ColumnInfo(name = "movie_id")
+    val movieId: Int? = null
 )

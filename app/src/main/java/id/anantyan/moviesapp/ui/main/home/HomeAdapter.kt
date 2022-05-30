@@ -38,7 +38,7 @@ class HomeAdapter @Inject constructor(
                         localRepository.insertMovies(getItem(adapterPosition).toMoviesLocal())
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_24)
                     } else {
-                        localRepository.deleteMovies(getItem(adapterPosition).toMoviesLocal())
+                        localRepository.deleteMovies(getItem(adapterPosition).id!!)
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_border_24)
                     }
                 }
@@ -51,7 +51,7 @@ class HomeAdapter @Inject constructor(
             posterPath = this.posterPath,
             releaseDate = this.releaseDate,
             voteAverage = this.voteAverage,
-            id = this.id
+            movieId = this.id
         )
 
         fun bind(item: ResultsItem) {
