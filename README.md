@@ -8,7 +8,6 @@ Hello world! 🚀
 - Retrofit 2 + OkHttp
 - Navigation Component
 - Lifecycle Component
-- Recycler View + Diffutils
 - Recycler View + Diffutils + Paging 3
 - DI Dagger - Hilt
 - Handle Killing Proccess Death - Saved State Handle
