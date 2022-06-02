@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -16,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import id.anantyan.moviesapp.R
 import id.anantyan.moviesapp.databinding.FragmentHomeBinding
-import id.anantyan.moviesapp.ui.main.MainSharedViewModel
+import id.anantyan.moviesapp.ui.main.MainViewModel
 import id.anantyan.utils.Constant
 import id.anantyan.utils.Resource
 import id.anantyan.utils.checkInternet
@@ -28,22 +29,22 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: MainSharedViewModel by activityViewModels()
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private val viewModel: HomeViewModel by viewModels()
 
-    @Inject lateinit var adapterTrending: HomeAdapterHelper
+    @Inject lateinit var adapterTrending: HomeAdapter
     @Inject
     @Named(Constant.CAT_POPULAR)
-    lateinit var adapterPopular: HomeAdapterHelper
+    lateinit var adapterPopular: HomeAdapter
     @Inject
     @Named(Constant.CAT_TOP_RATED)
-    lateinit var adapterTopRated: HomeAdapterHelper
+    lateinit var adapterTopRated: HomeAdapter
     @Inject
     @Named(Constant.CAT_NOW_PLAYING)
-    lateinit var adapterNowPlaying: HomeAdapterHelper
+    lateinit var adapterNowPlaying: HomeAdapter
     @Inject
     @Named(Constant.CAT_UPCOMING)
-    lateinit var adapterUpComing: HomeAdapterHelper
+    lateinit var adapterUpComing: HomeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,10 +61,43 @@ class HomeFragment : Fragment() {
     }
 
     private fun onBindView(view: View) {
+        binding.btnNowPlayingDetail.setOnClickListener {
+            sharedViewModel.titleActionBar("Now Playing")
+            sharedViewModel.category(Constant.CAT_NOW_PLAYING)
+            val destination = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+            view.findNavController().navigate(destination)
+        }
+        binding.btnPopularDetail.setOnClickListener {
+            sharedViewModel.titleActionBar("Popular")
+            sharedViewModel.category(Constant.CAT_POPULAR)
+            val destination = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+            view.findNavController().navigate(destination)
+        }
+        binding.btnTopRatedDetail.setOnClickListener {
+            sharedViewModel.titleActionBar("Top Rated")
+            sharedViewModel.category(Constant.CAT_TOP_RATED)
+            val destination = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+            view.findNavController().navigate(destination)
+        }
+        binding.btnTrendingDetail.setOnClickListener {
+            sharedViewModel.titleActionBar("Trending")
+            sharedViewModel.category("trending")
+            val destination = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+            view.findNavController().navigate(destination)
+        }
+        binding.btnUpcomingDetail.setOnClickListener {
+            sharedViewModel.titleActionBar("Upcoming")
+            sharedViewModel.category(Constant.CAT_UPCOMING)
+            val destination = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+            view.findNavController().navigate(destination)
+        }
+
         binding.rvTrending.setHasFixedSize(true)
         binding.rvTrending.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvTrending.itemAnimator = DefaultItemAnimator()
         binding.rvTrending.isNestedScrollingEnabled = true
+        binding.rvTrending.adapter = adapterTrending
+        adapterTrending.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         adapterTrending.onClick { _, movieId ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
@@ -74,6 +108,8 @@ class HomeFragment : Fragment() {
         binding.rvPopular.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvPopular.itemAnimator = DefaultItemAnimator()
         binding.rvPopular.isNestedScrollingEnabled = true
+        binding.rvPopular.adapter = adapterPopular
+        adapterPopular.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         adapterPopular.onClick { _, movieId ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
@@ -84,6 +120,8 @@ class HomeFragment : Fragment() {
         binding.rvTopRated.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvTopRated.itemAnimator = DefaultItemAnimator()
         binding.rvTopRated.isNestedScrollingEnabled = true
+        binding.rvTopRated.adapter = adapterTopRated
+        adapterTopRated.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         adapterTopRated.onClick { _, movieId ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
@@ -94,6 +132,8 @@ class HomeFragment : Fragment() {
         binding.rvUpcoming.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvUpcoming.itemAnimator = DefaultItemAnimator()
         binding.rvUpcoming.isNestedScrollingEnabled = true
+        binding.rvUpcoming.adapter = adapterUpComing
+        adapterUpComing.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         adapterUpComing.onClick { _, movieId ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
@@ -104,6 +144,8 @@ class HomeFragment : Fragment() {
         binding.rvNowPlaying.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvNowPlaying.itemAnimator = DefaultItemAnimator()
         binding.rvNowPlaying.isNestedScrollingEnabled = true
+        binding.rvNowPlaying.adapter = adapterNowPlaying
+        adapterNowPlaying.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         adapterNowPlaying.onClick { _, movieId ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
@@ -116,8 +158,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressTrending.visibility = View.GONE
-                    adapterTrending.differ(it.data!!)
-                    binding.rvTrending.adapter = adapterTrending.init()
+                    adapterTrending.submitList(it.data!!)
                 }
                 is Resource.Loading -> {
                     binding.progressTrending.visibility = View.VISIBLE
@@ -132,8 +173,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressPopular.visibility = View.GONE
-                    adapterPopular.differ(it.data!!)
-                    binding.rvPopular.adapter = adapterPopular.init()
+                    adapterPopular.submitList(it.data!!)
                 }
                 is Resource.Loading -> {
                     binding.progressPopular.visibility = View.VISIBLE
@@ -148,8 +188,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressTopRated.visibility = View.GONE
-                    adapterTopRated.differ(it.data!!)
-                    binding.rvTopRated.adapter = adapterTopRated.init()
+                    adapterTopRated.submitList(it.data!!)
                 }
                 is Resource.Loading -> {
                     binding.progressTopRated.visibility = View.VISIBLE
@@ -164,8 +203,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressNowPlaying.visibility = View.GONE
-                    adapterNowPlaying.differ(it.data!!)
-                    binding.rvNowPlaying.adapter = adapterNowPlaying.init()
+                    adapterNowPlaying.submitList(it.data!!)
                 }
                 is Resource.Loading -> {
                     binding.progressNowPlaying.visibility = View.VISIBLE
@@ -180,8 +218,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressUpcoming.visibility = View.GONE
-                    adapterUpComing.differ(it.data!!)
-                    binding.rvUpcoming.adapter = adapterUpComing.init()
+                    adapterUpComing.submitList(it.data!!)
                 }
                 is Resource.Loading -> {
                     binding.progressUpcoming.visibility = View.VISIBLE

@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import javax.inject.Inject
 
-class DataStoreManager(
+class DataStoreManager @Inject constructor(
     private val context: Context
 ) {
     companion object {

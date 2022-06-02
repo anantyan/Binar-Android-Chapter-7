@@ -9,7 +9,9 @@ Hello world! 🚀
 - Navigation Component
 - Lifecycle Component
 - Recycler View + Diffutils
+- Recycler View + Diffutils + Paging 3
 - DI Dagger - Hilt
+- Handle Killing Proccess Death - Saved State Handle
 - **MVVM Based**
 - Material Design Based
 ### Third party

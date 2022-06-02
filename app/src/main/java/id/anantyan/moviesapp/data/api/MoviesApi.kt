@@ -12,13 +12,15 @@ import retrofit2.http.Query
 interface MoviesApi {
     @GET("trending/movie/week")
     suspend fun byTrendingWeek(
-        @Query("api_key") apiKey: String? = API_KEY
+        @Query("api_key") apiKey: String? = API_KEY,
+        @Query("page") page: Int? = 1
     ): Response<Movies>
 
     @GET("movie/{path}") // popular, top_rated, upcoming, now_playing
     suspend fun byCategory(
         @Path("path") path: String,
-        @Query("api_key") apiKey: String? = API_KEY
+        @Query("api_key") apiKey: String? = API_KEY,
+        @Query("page") page: Int? = 1
     ): Response<Movies>
 
     @GET("search/movie")

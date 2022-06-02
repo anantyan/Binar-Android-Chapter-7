@@ -13,7 +13,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -25,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.anantyan.moviesapp.R
 import id.anantyan.moviesapp.databinding.FragmentProfileBinding
 import id.anantyan.moviesapp.ui.dialog.dialog
+import id.anantyan.moviesapp.ui.main.MainViewModel
 import id.anantyan.utils.Constant.PERMISSION_CAMERA_AND_WRITE_EXTERNAL
 import id.anantyan.utils.Resource
 import id.anantyan.utils.convertBitmapToFile
@@ -33,6 +36,7 @@ import id.anantyan.utils.permission.EasyPermissions
 import id.anantyan.utils.permission.EasyPermissions.somePermissionPermanentlyDenied
 import id.anantyan.utils.permission.dialogs.SettingsDialog
 import id.anantyan.utils.requestCameraAndWriteExternalPermission
+import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -41,11 +45,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
-    /*private var _bitmap: Bitmap? = null*/
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
-    @Inject lateinit var adapterProfile: ProfileAdapterHelper
+    @Inject lateinit var adapterProfile: ProfileAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +70,7 @@ class ProfileFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.rvProfile.itemAnimator = DefaultItemAnimator()
         binding.rvProfile.addItemDecoration(dividerVertical(requireContext(), 32, 32))
         binding.rvProfile.isNestedScrollingEnabled = false
+        binding.rvProfile.adapter = adapterProfile
         binding.btnSetProfile.setOnClickListener {
             viewModel.getAccount()
         }
@@ -112,8 +116,7 @@ class ProfileFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         viewModel.setProfile.observe(viewLifecycleOwner) {
             when(it) {
                 is Resource.Success -> {
-                    adapterProfile.differ(it.data!!)
-                    binding.rvProfile.adapter = adapterProfile.init()
+                    adapterProfile.submitList(it.data!!)
                 }
                 is Resource.Error -> {
                     onSnackbar("${it.message}")
@@ -138,8 +141,8 @@ class ProfileFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         viewModel.showAccount.observe(viewLifecycleOwner) {
             when(it) {
                 is Resource.Success -> {
-                    adapterProfile.differ(it.data!!)
-                    binding.rvProfile.adapter = adapterProfile.init()
+                    adapterProfile.submitList(it.data!!)
+                    binding.rvProfile.adapter = adapterProfile
                 }
                 is Resource.Error -> {
                     onSnackbar("${it.message}")
@@ -152,7 +155,6 @@ class ProfileFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 is Resource.Success -> {
                     it.data?.let { urlImg ->
                         binding.imgView.load(urlImg) {
-                            crossfade(true)
                             placeholder(R.drawable.ic_baseline_person_outline_24)
                             error(R.drawable.ic_baseline_person_outline_24)
                             transformations(RoundedCornersTransformation(16F))

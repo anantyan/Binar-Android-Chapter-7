@@ -9,8 +9,7 @@ import id.anantyan.moviesapp.databinding.ListItemGenresBinding
 import id.anantyan.moviesapp.model.GenresItem
 import javax.inject.Inject
 
-class GenresAdapter @Inject constructor() : ListAdapter<GenresItem, RecyclerView.ViewHolder>(diffUtilGenres),
-    HomeDetailAdapterHelper.Genres {
+class GenresAdapter @Inject constructor() : ListAdapter<GenresItem, RecyclerView.ViewHolder>(diffUtilGenres) {
     inner class ViewHolder(private val binding: ListItemGenresBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: GenresItem) {
             binding.txtGenres.text = item.name
@@ -31,14 +30,6 @@ class GenresAdapter @Inject constructor() : ListAdapter<GenresItem, RecyclerView
         holder as ViewHolder
         val item = getItem(position)
         holder.bind(item)
-    }
-
-    override fun init(): ListAdapter<GenresItem, RecyclerView.ViewHolder> {
-        return this
-    }
-
-    override fun differ(list: List<GenresItem>) {
-        submitList(list)
     }
 }
 

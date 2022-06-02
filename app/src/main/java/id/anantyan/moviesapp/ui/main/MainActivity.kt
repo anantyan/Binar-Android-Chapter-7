@@ -20,6 +20,7 @@ import id.anantyan.moviesapp.databinding.ActivityMainBinding
 import id.anantyan.moviesapp.ui.auth.AuthActivity
 import id.anantyan.moviesapp.ui.dialog.ProfileDialog
 import id.anantyan.moviesapp.ui.dialog.ProfileDialogHelper
+import id.anantyan.moviesapp.ui.main.category.CategoryFragmentDirections
 import id.anantyan.moviesapp.ui.main.home.HomeFragmentDirections
 import id.anantyan.utils.checkInternet
 import id.anantyan.utils.sharedPreferences.DataStoreManager
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(),
     Toolbar.OnMenuItemClickListener {
 
     private lateinit var navController: NavController
+    private lateinit var navDestination: NavDestination
     private lateinit var binding: ActivityMainBinding
     private val dialog: ProfileDialogHelper by lazy { ProfileDialog(this) }
     @Inject lateinit var store: DataStoreManager
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity(),
         destination: NavDestination,
         arguments: Bundle?
     ) {
+        navDestination = destination
         when (destination.id) {
             R.id.homeFragment -> {
                 binding.toolbar.menu.findItem(R.id.logoutAppBar).isVisible = false
@@ -83,12 +86,12 @@ class MainActivity : AppCompatActivity(),
                 binding.toolbar.menu.findItem(R.id.favoriteAppBar).isVisible = false
                 binding.bottomNavbar.visibility = View.VISIBLE
             }
-            R.id.favoriteFragment -> {
+            R.id.categoryFragment -> {
                 binding.toolbar.menu.findItem(R.id.logoutAppBar).isVisible = false
-                binding.toolbar.menu.findItem(R.id.favoriteAppBar).isVisible = false
+                binding.toolbar.menu.findItem(R.id.favoriteAppBar).isVisible = true
                 binding.bottomNavbar.visibility = View.GONE
             }
-            R.id.homeDetailFragment -> {
+            else -> {
                 binding.toolbar.menu.findItem(R.id.logoutAppBar).isVisible = false
                 binding.toolbar.menu.findItem(R.id.favoriteAppBar).isVisible = false
                 binding.bottomNavbar.visibility = View.GONE
@@ -111,8 +114,16 @@ class MainActivity : AppCompatActivity(),
                 false
             }
             R.id.favoriteAppBar -> {
-                val destination = HomeFragmentDirections.actionHomeFragmentToFavoriteFragment()
-                navController.navigate(destination)
+                when (navDestination.id) {
+                    R.id.homeFragment -> {
+                        val destination = HomeFragmentDirections.actionHomeFragmentToFavoriteFragment()
+                        navController.navigate(destination)
+                    }
+                    R.id.categoryFragment -> {
+                        val destination = CategoryFragmentDirections.actionCategoryFragmentToFavoriteFragment()
+                        navController.navigate(destination)
+                    }
+                }
                 false
             }
             else -> true
@@ -123,5 +134,9 @@ class MainActivity : AppCompatActivity(),
         val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
         snackbar.setBackgroundTint(ContextCompat.getColor(this, R.color.error))
         snackbar.show()
+    }
+
+    fun setTitleActionBar(title: String) {
+        binding.toolbar.title = title
     }
 }

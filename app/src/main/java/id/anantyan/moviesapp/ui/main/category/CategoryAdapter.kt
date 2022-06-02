@@ -1,42 +1,44 @@
-package id.anantyan.moviesapp.ui.main.home
+package id.anantyan.moviesapp.ui.main.category
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.size.ViewSizeResolver
 import coil.transform.RoundedCornersTransformation
 import id.anantyan.moviesapp.R
 import id.anantyan.moviesapp.data.local.model.MoviesLocal
+import id.anantyan.moviesapp.databinding.ListItemCategoryBinding
 import id.anantyan.moviesapp.databinding.ListItemHomeBinding
 import id.anantyan.moviesapp.model.ResultsItem
 import id.anantyan.moviesapp.repository.MoviesLocalRepository
+import id.anantyan.moviesapp.ui.main.home.HomeAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HomeAdapter @Inject constructor(
+class CategoryAdapter @Inject constructor(
     private val localRepository: MoviesLocalRepository
-) : ListAdapter<ResultsItem, RecyclerView.ViewHolder>(diffUtilCallback) {
+) : PagingDataAdapter<ResultsItem, RecyclerView.ViewHolder>(diffUtilCallback) {
     private var _onClick: ((Int, Int) -> Unit)? = null
 
-    inner class ViewHolder(val binding: ListItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ListItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
                 _onClick?.let {
-                    it(bindingAdapterPosition, getItem(bindingAdapterPosition).id!!)
+                    it(bindingAdapterPosition, getItem(bindingAdapterPosition)?.id!!)
                 }
             }
             binding.btnFavorite.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    if (localRepository.checkMovies(getItem(bindingAdapterPosition).id!!)) {
-                        localRepository.insertMovies(getItem(bindingAdapterPosition).toMoviesLocal())
+                    if (localRepository.checkMovies(getItem(bindingAdapterPosition)?.id!!)) {
+                        getItem(bindingAdapterPosition)?.toMoviesLocal()?.let { it1 -> localRepository.insertMovies(it1) }
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_24)
                     } else {
-                        localRepository.deleteMovies(getItem(bindingAdapterPosition).id!!)
+                        localRepository.deleteMovies(getItem(bindingAdapterPosition)?.id!!)
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_border_24)
                     }
                 }
@@ -69,20 +71,22 @@ class HomeAdapter @Inject constructor(
         }
     }
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        holder as ViewHolder
+        val item = getItem(position)
+        item?.let {
+            holder.bind(it)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(
-            ListItemHomeBinding.inflate(
+            ListItemCategoryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
         )
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder as ViewHolder
-        val item = getItem(position)
-        holder.bind(item)
     }
 
     fun onClick(listener: (Int, Int) -> Unit) {

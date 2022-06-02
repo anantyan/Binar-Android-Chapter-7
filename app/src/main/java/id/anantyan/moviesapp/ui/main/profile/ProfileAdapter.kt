@@ -9,8 +9,7 @@ import id.anantyan.moviesapp.databinding.ListItemProfileBinding
 import id.anantyan.moviesapp.data.local.model.ProfileLocal
 import javax.inject.Inject
 
-class ProfileAdapter @Inject constructor() : ListAdapter<ProfileLocal, RecyclerView.ViewHolder>(diffUtilCallback),
-    ProfileAdapterHelper {
+class ProfileAdapter @Inject constructor() : ListAdapter<ProfileLocal, RecyclerView.ViewHolder>(diffUtilCallback) {
     inner class ViewHolder(private val binding: ListItemProfileBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ProfileLocal) {
             binding.imageView.setImageResource(item.resId!!)
@@ -33,14 +32,6 @@ class ProfileAdapter @Inject constructor() : ListAdapter<ProfileLocal, RecyclerV
         holder as ViewHolder
         val item = getItem(position)
         holder.bind(item)
-    }
-
-    override fun init(): ListAdapter<ProfileLocal, RecyclerView.ViewHolder> {
-        return this
-    }
-
-    override fun differ(list: List<ProfileLocal>) {
-        submitList(list)
     }
 }
 

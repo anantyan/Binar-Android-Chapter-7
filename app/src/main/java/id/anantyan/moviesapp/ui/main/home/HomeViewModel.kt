@@ -36,15 +36,15 @@ class HomeViewModel @Inject constructor(
         _trendingResponse.postValue(Resource.Loading())
         try {
             val response = remoteRepository.trendingWeek()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
                     response.body()?.let {
                         _trendingResponse.postValue(Resource.Success(it.results!!))
                     }
-                } else {
-                    response.body()?.let {
-                        throw Exception(it.statusMessage)
-                    }
+                }
+            } else {
+                response.body()?.let {
+                    throw Exception(it.statusMessage)
                 }
             }
         } catch(ex: Exception) {
@@ -57,20 +57,22 @@ class HomeViewModel @Inject constructor(
         _popularResponse.postValue(Resource.Loading())
         try {
             val response = remoteRepository.popular()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
                     response.body()?.let {
                         _popularResponse.postValue(Resource.Success(it.results!!))
                     }
-                } else {
-                    response.body()?.let {
-                        throw Exception(it.statusMessage)
-                    }
+                }
+            } else {
+                response.body()?.let {
+                    throw Exception(it.statusMessage)
                 }
             }
         } catch (ex: Exception) {
-            ex.message?.let {
-                _popularResponse.postValue(Resource.Error(it))
+            withContext(Dispatchers.Main) {
+                ex.message?.let {
+                    _popularResponse.postValue(Resource.Error(it))
+                }
             }
         }
     }
@@ -78,20 +80,22 @@ class HomeViewModel @Inject constructor(
         _topRatedResponse.postValue(Resource.Loading())
         try {
             val response = remoteRepository.topRated()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
                     response.body()?.let {
                         _topRatedResponse.postValue(Resource.Success(it.results!!))
                     }
-                } else {
-                    response.body()?.let {
-                        throw Exception(it.statusMessage)
-                    }
+                }
+            } else {
+                response.body()?.let {
+                    throw Exception(it.statusMessage)
                 }
             }
         } catch (ex: Exception) {
-            ex.message?.let {
-                _topRatedResponse.postValue(Resource.Error(it))
+            withContext(Dispatchers.Main) {
+                ex.message?.let {
+                    _topRatedResponse.postValue(Resource.Error(it))
+                }
             }
         }
     }
@@ -99,20 +103,22 @@ class HomeViewModel @Inject constructor(
         _nowPlayingResponse.postValue(Resource.Loading())
         try {
             val response = remoteRepository.nowPlaying()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
                     response.body()?.let {
                         _nowPlayingResponse.postValue(Resource.Success(it.results!!))
                     }
-                } else {
-                    response.body()?.let {
-                        throw Exception(it.statusMessage)
-                    }
+                }
+            } else {
+                response.body()?.let {
+                    throw Exception(it.statusMessage)
                 }
             }
         } catch (ex: Exception) {
-            ex.message?.let {
-                _nowPlayingResponse.postValue(Resource.Error(it))
+            withContext(Dispatchers.Main) {
+                ex.message?.let {
+                    _nowPlayingResponse.postValue(Resource.Error(it))
+                }
             }
         }
     }
@@ -120,20 +126,22 @@ class HomeViewModel @Inject constructor(
         _upcomingResponse.postValue(Resource.Loading())
         try {
             val response = remoteRepository.upcoming()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
                     response.body()?.let {
                         _upcomingResponse.postValue(Resource.Success(it.results!!))
                     }
-                } else {
-                    response.body()?.let {
-                        throw Exception(it.statusMessage)
-                    }
+                }
+            } else {
+                response.body()?.let {
+                    throw Exception(it.statusMessage)
                 }
             }
         } catch (ex: Exception) {
-            ex.message?.let {
-                _upcomingResponse.postValue(Resource.Error(it))
+            withContext(Dispatchers.Main) {
+                ex.message?.let {
+                    _upcomingResponse.postValue(Resource.Error(it))
+                }
             }
         }
     }

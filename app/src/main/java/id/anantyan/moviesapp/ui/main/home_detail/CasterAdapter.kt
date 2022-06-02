@@ -13,16 +13,12 @@ import id.anantyan.moviesapp.databinding.ListItemCreditsBinding
 import id.anantyan.moviesapp.model.CastItem
 import javax.inject.Inject
 
-class CasterAdapter @Inject constructor() : ListAdapter<CastItem, RecyclerView.ViewHolder>(diffUtilCaster),
-    HomeDetailAdapterHelper.Caster {
+class CasterAdapter @Inject constructor() : ListAdapter<CastItem, RecyclerView.ViewHolder>(diffUtilCaster) {
     inner class ViewHolder(private val binding: ListItemCreditsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CastItem) {
             binding.txtName.text = item.originalName
             binding.txtCharacter.text = item.character
             binding.imgProfilePath.load(item.profilePath) {
-                crossfade(true)
-                placeholder(R.drawable.ic_outline_image_24)
-                error(R.drawable.ic_outline_image_not_supported_24)
                 transformations(RoundedCornersTransformation(16F))
                 size(ViewSizeResolver(binding.imgProfilePath))
             }
@@ -44,14 +40,6 @@ class CasterAdapter @Inject constructor() : ListAdapter<CastItem, RecyclerView.V
         val item = getItem(position)
         holder.bind(item)
     }
-
-    override fun init(): ListAdapter<CastItem, RecyclerView.ViewHolder> {
-        return this
-    }
-
-    override fun differ(list: List<CastItem>) {
-        submitList(list)
-    }
 }
 
 val diffUtilCaster = object : DiffUtil.ItemCallback<CastItem>() {
@@ -62,4 +50,9 @@ val diffUtilCaster = object : DiffUtil.ItemCallback<CastItem>() {
     override fun areContentsTheSame(oldItem: CastItem, newItem: CastItem): Boolean {
         return oldItem == newItem
     }
+}
+
+interface CasterAdapterHelper {
+    fun init(): ListAdapter<CastItem, RecyclerView.ViewHolder>
+    fun differ(list: List<CastItem>)
 }

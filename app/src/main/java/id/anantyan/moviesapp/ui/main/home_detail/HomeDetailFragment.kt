@@ -23,8 +23,8 @@ import id.anantyan.moviesapp.R
 import id.anantyan.moviesapp.data.local.model.MoviesLocal
 import id.anantyan.moviesapp.databinding.FragmentHomeDetailBinding
 import id.anantyan.moviesapp.model.MoviesDetail
-import id.anantyan.moviesapp.model.ResultsItem
-import id.anantyan.moviesapp.ui.main.MainSharedViewModel
+import id.anantyan.moviesapp.ui.main.MainActivity
+import id.anantyan.moviesapp.ui.main.MainViewModel
 import id.anantyan.utils.Resource
 import id.anantyan.utils.checkInternet
 import javax.inject.Inject
@@ -34,11 +34,11 @@ class HomeDetailFragment : Fragment() {
 
     private var _binding: FragmentHomeDetailBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: MainSharedViewModel by activityViewModels()
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private val viewModel: HomeDetailViewModel by viewModels()
 
-    @Inject lateinit var adapterGenres: HomeDetailAdapterHelper.Genres
-    @Inject lateinit var adapterCaster: HomeDetailAdapterHelper.Caster
+    @Inject lateinit var adapterGenres: GenresAdapter
+    @Inject lateinit var adapterCaster: CasterAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,12 +66,10 @@ class HomeDetailFragment : Fragment() {
                         size(ViewSizeResolver(binding.backdropPath))
                     }
                     binding.imgPosterPath.load(it.data?.posterPath) {
-                        crossfade(true)
-                        placeholder(R.drawable.ic_outline_image_24)
-                        error(R.drawable.ic_outline_image_not_supported_24)
                         transformations(RoundedCornersTransformation(16F))
                         size(ViewSizeResolver(binding.imgPosterPath))
                     }
+                    (requireActivity() as MainActivity).setTitleActionBar(it.data?.title.toString())
                     binding.txtTitle.text = it.data?.title
                     binding.releaseDate.text = it.data?.releaseDate
                     binding.status.text = "Status : ${it.data?.status}"
@@ -91,8 +89,8 @@ class HomeDetailFragment : Fragment() {
                             viewModel.checkFavorite(item)
                         }
                     }
-                    adapterGenres.differ(it.data?.genres!!)
-                    binding.rvGenres.adapter = adapterGenres.init()
+                    adapterGenres.submitList(it.data?.genres!!)
+                    binding.rvGenres.adapter = adapterGenres
                     it.data?.toMoviesLocal()?.let { item ->
                         viewModel.checkIconFavorite(item)
                     }
@@ -111,8 +109,7 @@ class HomeDetailFragment : Fragment() {
         viewModel.getCreditsByIdResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is Resource.Success -> {
-                    adapterCaster.differ(it.data!!)
-                    binding.rvCaster.adapter = adapterCaster.init()
+                    adapterCaster.submitList(it.data!!)
                     binding.progressCaster.visibility = View.GONE
                 }
                 is Resource.Loading -> {
@@ -146,11 +143,15 @@ class HomeDetailFragment : Fragment() {
         binding.rvCaster.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvCaster.itemAnimator = DefaultItemAnimator()
         binding.rvCaster.isNestedScrollingEnabled = true
+        binding.rvCaster.adapter = adapterCaster
 
         binding.rvGenres.setHasFixedSize(true)
         binding.rvGenres.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.rvGenres.itemAnimator = DefaultItemAnimator()
         binding.rvGenres.isNestedScrollingEnabled = true
+
+        adapterCaster.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        adapterGenres.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
     }
 
     private fun onSnackbar(message: String) {

@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class FavoriteAdapter @Inject constructor(
     private val localRepository: MoviesLocalRepository
-) : ListAdapter<MoviesLocal, RecyclerView.ViewHolder>(diffUtilCallback), FavoriteAdapterHelper {
+) : ListAdapter<MoviesLocal, RecyclerView.ViewHolder>(diffUtilCallback) {
 
     private var _onClick: ((Int, Int) -> Unit)? = null
 
@@ -28,16 +28,16 @@ class FavoriteAdapter @Inject constructor(
         init {
             itemView.setOnClickListener {
                 _onClick?.let {
-                    it(adapterPosition, getItem(adapterPosition).movieId!!)
+                    it(bindingAdapterPosition, getItem(bindingAdapterPosition).movieId!!)
                 }
             }
             binding.btnFavorite.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    if (localRepository.checkMovies(getItem(adapterPosition).movieId!!)) {
-                        localRepository.insertMovies(getItem(adapterPosition))
+                    if (localRepository.checkMovies(getItem(bindingAdapterPosition).movieId!!)) {
+                        localRepository.insertMovies(getItem(bindingAdapterPosition))
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_24)
                     } else {
-                        localRepository.deleteMovies(getItem(adapterPosition).movieId!!)
+                        localRepository.deleteMovies(getItem(bindingAdapterPosition).movieId!!)
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_border_24)
                     }
                 }
@@ -50,9 +50,6 @@ class FavoriteAdapter @Inject constructor(
             binding.releaseDate.text = item.releaseDate
             binding.description.text = item.overview
             binding.imgPosterPath.load(item.posterPath) {
-                crossfade(true)
-                placeholder(R.drawable.ic_outline_image_24)
-                error(R.drawable.ic_outline_image_not_supported_24)
                 transformations(RoundedCornersTransformation(16F))
                 size(ViewSizeResolver(binding.imgPosterPath))
             }
@@ -82,15 +79,7 @@ class FavoriteAdapter @Inject constructor(
         holder.bind(item)
     }
 
-    override fun init(): ListAdapter<MoviesLocal, RecyclerView.ViewHolder> {
-        return this
-    }
-
-    override fun differ(list: List<MoviesLocal>) {
-        submitList(list)
-    }
-
-    override fun onClick(listener: (Int, Int) -> Unit) {
+    fun onClick(listener: (Int, Int) -> Unit) {
         _onClick = listener
     }
 }

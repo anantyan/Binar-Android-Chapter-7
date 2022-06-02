@@ -43,7 +43,7 @@ data class ResultsItem(
     val title: String? = null,
 
     @SerializedName("genre_ids")
-    val genreIds: List<Int?>? = null,
+    val genreIds: List<Int>? = null,
 
     @SerializedName("poster_path")
     val _posterPath: String? = null,
