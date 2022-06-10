@@ -11,7 +11,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -21,17 +21,21 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.2'
       - uses: maierj/fastlane-action@v2.2.0
         with:
           lane: 'go'
-      - uses: actions/upload-artifact@v3
+      - name: Build apks
+        uses: actions/upload-artifact@v3
         with:
           name: build-apks
           path: app/build/outputs/apk
-      - uses: actions/upload-artifact@v3
+      - name: Build report
+        uses: actions/upload-artifact@v3
         with:
           name: build-report
           path: app/build/reports
