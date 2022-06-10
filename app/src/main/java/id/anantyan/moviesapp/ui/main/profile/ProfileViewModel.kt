@@ -50,7 +50,7 @@ class ProfileViewModel @Inject constructor(
             }
         } catch (ex: Exception) {
             _showAccount.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }
@@ -62,7 +62,7 @@ class ProfileViewModel @Inject constructor(
             }
         } catch (ex: Exception) {
             _showPhoto.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }
@@ -77,7 +77,7 @@ class ProfileViewModel @Inject constructor(
             _setProfile.postValue(Resource.Success(list))
         } catch (ex: Exception) {
             _setProfile.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }
@@ -87,7 +87,7 @@ class ProfileViewModel @Inject constructor(
             _setPassword.postValue(Resource.Success("Berhasil mengubah password!"))
         } catch (ex: Exception) {
             _setPassword.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }
@@ -99,7 +99,7 @@ class ProfileViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     response.body()?.let {
                         localRepository.setPhoto(it.data?.url.orEmpty())
-                        _setPhoto.postValue(Resource.Success(it.data?.url.orEmpty(), "Foto berhasil disimpan!"))
+                        _setPhoto.postValue(Resource.Success(it.data?.url.orEmpty()))
                     }
                 } else {
                     response.body()?.let {
@@ -109,7 +109,7 @@ class ProfileViewModel @Inject constructor(
             }
         } catch (ex: Exception) {
             _setPhoto.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }
@@ -121,7 +121,7 @@ class ProfileViewModel @Inject constructor(
             }
         } catch (ex: Exception) {
             _getAccount.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }

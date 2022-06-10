@@ -19,6 +19,9 @@ class CasterAdapter @Inject constructor() : ListAdapter<CastItem, RecyclerView.V
             binding.txtName.text = item.originalName
             binding.txtCharacter.text = item.character
             binding.imgProfilePath.load(item.profilePath) {
+                crossfade(true)
+                placeholder(R.drawable.ic_outline_image_24)
+                error(R.drawable.ic_outline_image_not_supported_24)
                 transformations(RoundedCornersTransformation(16F))
                 size(ViewSizeResolver(binding.imgProfilePath))
             }

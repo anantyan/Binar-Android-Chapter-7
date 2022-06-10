@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -98,10 +97,10 @@ class HomeFragment : Fragment() {
         binding.rvTrending.isNestedScrollingEnabled = true
         binding.rvTrending.adapter = adapterTrending
         adapterTrending.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        adapterTrending.onClick { _, movieId ->
+        adapterTrending.onClick { _, movies ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
-            sharedViewModel.movieId(movieId)
+            sharedViewModel.movieId(movies.id!!)
         }
 
         binding.rvPopular.setHasFixedSize(true)
@@ -110,10 +109,10 @@ class HomeFragment : Fragment() {
         binding.rvPopular.isNestedScrollingEnabled = true
         binding.rvPopular.adapter = adapterPopular
         adapterPopular.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        adapterPopular.onClick { _, movieId ->
+        adapterPopular.onClick { _, movies ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
-            sharedViewModel.movieId(movieId)
+            sharedViewModel.movieId(movies.id!!)
         }
 
         binding.rvTopRated.setHasFixedSize(true)
@@ -122,10 +121,10 @@ class HomeFragment : Fragment() {
         binding.rvTopRated.isNestedScrollingEnabled = true
         binding.rvTopRated.adapter = adapterTopRated
         adapterTopRated.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        adapterTopRated.onClick { _, movieId ->
+        adapterTopRated.onClick { _, movies ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
-            sharedViewModel.movieId(movieId)
+            sharedViewModel.movieId(movies.id!!)
         }
 
         binding.rvUpcoming.setHasFixedSize(true)
@@ -134,10 +133,10 @@ class HomeFragment : Fragment() {
         binding.rvUpcoming.isNestedScrollingEnabled = true
         binding.rvUpcoming.adapter = adapterUpComing
         adapterUpComing.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        adapterUpComing.onClick { _, movieId ->
+        adapterUpComing.onClick { _, movies ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
-            sharedViewModel.movieId(movieId)
+            sharedViewModel.movieId(movies.id!!)
         }
 
         binding.rvNowPlaying.setHasFixedSize(true)
@@ -146,10 +145,10 @@ class HomeFragment : Fragment() {
         binding.rvNowPlaying.isNestedScrollingEnabled = true
         binding.rvNowPlaying.adapter = adapterNowPlaying
         adapterNowPlaying.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        adapterNowPlaying.onClick { _, movieId ->
+        adapterNowPlaying.onClick { _, movies ->
             val destination = HomeFragmentDirections.actionHomeFragmentToHomeDetailFragment()
             view.findNavController().navigate(destination)
-            sharedViewModel.movieId(movieId)
+            sharedViewModel.movieId(movies.id!!)
         }
     }
 
@@ -158,7 +157,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressTrending.visibility = View.GONE
-                    adapterTrending.submitList(it.data!!)
+                    adapterTrending.submitList(it.data?.results)
                 }
                 is Resource.Loading -> {
                     binding.progressTrending.visibility = View.VISIBLE
@@ -173,7 +172,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressPopular.visibility = View.GONE
-                    adapterPopular.submitList(it.data!!)
+                    adapterPopular.submitList(it.data?.results)
                 }
                 is Resource.Loading -> {
                     binding.progressPopular.visibility = View.VISIBLE
@@ -188,7 +187,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressTopRated.visibility = View.GONE
-                    adapterTopRated.submitList(it.data!!)
+                    adapterTopRated.submitList(it.data?.results)
                 }
                 is Resource.Loading -> {
                     binding.progressTopRated.visibility = View.VISIBLE
@@ -203,7 +202,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressNowPlaying.visibility = View.GONE
-                    adapterNowPlaying.submitList(it.data!!)
+                    adapterNowPlaying.submitList(it.data?.results)
                 }
                 is Resource.Loading -> {
                     binding.progressNowPlaying.visibility = View.VISIBLE
@@ -218,7 +217,7 @@ class HomeFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     binding.progressUpcoming.visibility = View.GONE
-                    adapterUpComing.submitList(it.data!!)
+                    adapterUpComing.submitList(it.data?.results)
                 }
                 is Resource.Loading -> {
                     binding.progressUpcoming.visibility = View.VISIBLE

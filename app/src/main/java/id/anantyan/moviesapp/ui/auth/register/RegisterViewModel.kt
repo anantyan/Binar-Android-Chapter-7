@@ -25,7 +25,7 @@ class RegisterViewModel @Inject constructor(
             if (check == null) {
                 val response = localRepository.register(email, password)
                 if (response != 0L) {
-                    _register.postValue(Resource.Success(response, "Akun berhasil dibuat!"))
+                    _register.postValue(Resource.Success(response))
                 } else {
                     throw Exception("Gagal membuat akun!")
                 }
@@ -34,7 +34,7 @@ class RegisterViewModel @Inject constructor(
             }
         } catch (ex: Exception) {
             _register.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }

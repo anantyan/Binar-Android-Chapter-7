@@ -15,6 +15,6 @@ interface MoviesDao {
     @Query("SELECT * FROM tbl_movies WHERE movie_id=:movieId AND user_id=:usrId")
     suspend fun checkMovies(movieId: Int?, usrId: Int?): MoviesLocal?
 
-    @Query("SELECT * FROM tbl_movies WHERE user_id=:id")
-    fun selectMovies(id: Int?): LiveData<List<MoviesLocal>?>
+    @Query("SELECT * FROM tbl_movies WHERE user_id=:userId")
+    fun selectMovies(userId: Int?): LiveData<List<MoviesLocal>>
 }

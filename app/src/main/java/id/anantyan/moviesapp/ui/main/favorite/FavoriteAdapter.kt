@@ -50,6 +50,9 @@ class FavoriteAdapter @Inject constructor(
             binding.releaseDate.text = item.releaseDate
             binding.description.text = item.overview
             binding.imgPosterPath.load(item.posterPath) {
+                crossfade(true)
+                placeholder(R.drawable.ic_outline_image_24)
+                error(R.drawable.ic_outline_image_not_supported_24)
                 transformations(RoundedCornersTransformation(16F))
                 size(ViewSizeResolver(binding.imgPosterPath))
             }

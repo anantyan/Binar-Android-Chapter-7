@@ -58,6 +58,9 @@ class CategoryAdapter @Inject constructor(
             binding.txtNama.text = item.title
             binding.txtRate.text = item.voteAverage.toString()
             binding.imgPosterPath.load(item.posterPath) {
+                crossfade(true)
+                placeholder(R.drawable.ic_outline_image_24)
+                error(R.drawable.ic_outline_image_not_supported_24)
                 transformations(RoundedCornersTransformation(16F))
                 size(ViewSizeResolver(binding.imgPosterPath))
             }

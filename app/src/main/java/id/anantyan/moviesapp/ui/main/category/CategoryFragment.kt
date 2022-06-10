@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -18,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.anantyan.moviesapp.databinding.FragmentCategoryBinding
 import id.anantyan.moviesapp.ui.main.MainActivity
 import id.anantyan.moviesapp.ui.main.MainViewModel
-import id.anantyan.moviesapp.ui.main.home.HomeFragmentDirections
 import id.anantyan.utils.Constant
 import javax.inject.Inject
 

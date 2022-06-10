@@ -53,7 +53,7 @@ class RegisterFragment : Fragment() {
         viewModel.register.observe(viewLifecycleOwner) {
             when(it) {
                 is Resource.Success -> {
-                    onToast("${it.message}")
+                    onToast("Berhasil terdaftar!")
                 }
                 is Resource.Error -> {
                     onSnackbar("${it.message}")

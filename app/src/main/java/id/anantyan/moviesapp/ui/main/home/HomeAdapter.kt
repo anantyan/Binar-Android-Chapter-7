@@ -1,6 +1,7 @@
 package id.anantyan.moviesapp.ui.main.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -21,13 +22,31 @@ import javax.inject.Inject
 class HomeAdapter @Inject constructor(
     private val localRepository: MoviesLocalRepository
 ) : ListAdapter<ResultsItem, RecyclerView.ViewHolder>(diffUtilCallback) {
-    private var _onClick: ((Int, Int) -> Unit)? = null
+
+    private var _onClick: ((Int, ResultsItem) -> Unit)? = null
 
     inner class ViewHolder(val binding: ListItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            itemView.setOnClickListener {
+        private fun ResultsItem.toMoviesLocal() = MoviesLocal(
+            overview = this.overview,
+            title = this.title,
+            posterPath = this.posterPath,
+            releaseDate = this.releaseDate,
+            voteAverage = this.voteAverage,
+            movieId = this.id
+        )
+        fun bind(item: ResultsItem) {
+            binding.txtNama.text = item.title
+            binding.txtRate.text = item.voteAverage.toString()
+            binding.imgPosterPath.load(item.posterPath) {
+                crossfade(true)
+                placeholder(R.drawable.ic_outline_image_24)
+                error(R.drawable.ic_outline_image_not_supported_24)
+                transformations(RoundedCornersTransformation(16F))
+                size(ViewSizeResolver(binding.imgPosterPath))
+            }
+            binding.root.setOnClickListener {
                 _onClick?.let {
-                    it(bindingAdapterPosition, getItem(bindingAdapterPosition).id!!)
+                    it(bindingAdapterPosition, getItem(bindingAdapterPosition))
                 }
             }
             binding.btnFavorite.setOnClickListener {
@@ -40,24 +59,6 @@ class HomeAdapter @Inject constructor(
                         binding.btnFavorite.setImageResource(R.drawable.ic_baseline_star_border_24)
                     }
                 }
-            }
-        }
-
-        private fun ResultsItem.toMoviesLocal() = MoviesLocal(
-            overview = this.overview,
-            title = this.title,
-            posterPath = this.posterPath,
-            releaseDate = this.releaseDate,
-            voteAverage = this.voteAverage,
-            movieId = this.id
-        )
-
-        fun bind(item: ResultsItem) {
-            binding.txtNama.text = item.title
-            binding.txtRate.text = item.voteAverage.toString()
-            binding.imgPosterPath.load(item.posterPath) {
-                transformations(RoundedCornersTransformation(16F))
-                size(ViewSizeResolver(binding.imgPosterPath))
             }
             CoroutineScope(Dispatchers.IO).launch {
                 if (localRepository.checkMovies(item.id!!)) {
@@ -72,7 +73,9 @@ class HomeAdapter @Inject constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(
             ListItemHomeBinding.inflate(
-                LayoutInflater.from(parent.context),
+                LayoutInflater.from(
+                    parent.context
+                ),
                 parent,
                 false
             )
@@ -81,18 +84,17 @@ class HomeAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder as ViewHolder
-        val item = getItem(position)
-        holder.bind(item)
+        holder.bind(getItem(position))
     }
 
-    fun onClick(listener: (Int, Int) -> Unit) {
-        _onClick = listener
+    fun onClick(listener: ((Int, ResultsItem) -> Unit)) {
+        this._onClick = listener
     }
 }
 
 val diffUtilCallback = object : DiffUtil.ItemCallback<ResultsItem>() {
     override fun areItemsTheSame(oldItem: ResultsItem, newItem: ResultsItem): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: ResultsItem, newItem: ResultsItem): Boolean {

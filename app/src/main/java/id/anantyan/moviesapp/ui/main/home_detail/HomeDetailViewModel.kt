@@ -49,7 +49,7 @@ class HomeDetailViewModel @Inject constructor(
             }
         } catch(ex: Exception) {
             ex.message?.let {
-                _getMovieByIdResponse.postValue(Resource.Error(it))
+                _getMovieByIdResponse.postValue(Resource.Error(code = null, message = it))
             }
         }
     }
@@ -71,7 +71,7 @@ class HomeDetailViewModel @Inject constructor(
             }
         } catch(ex: Exception) {
             ex.message?.let {
-                _getCreditsByIdResponse.postValue(Resource.Error(it))
+                _getCreditsByIdResponse.postValue(Resource.Error(code = null, message = it))
             }
         }
     }
@@ -81,7 +81,7 @@ class HomeDetailViewModel @Inject constructor(
             localRepository.insertMovies(item)
             _checkFavoriteResponse.postValue(Resource.Success(true))
         } else {
-            localRepository.deleteMovies(item.movieId!!)
+            localRepository.deleteMovies(item.movieId)
             _checkFavoriteResponse.postValue(Resource.Success(false))
         }
     }

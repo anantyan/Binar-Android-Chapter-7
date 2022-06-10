@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
             }
         } catch (ex: Exception) {
             _login.postValue(
-                ex.message?.let { Resource.Error(it) }
+                ex.message?.let { Resource.Error(code = null, message = it) }
             )
         }
     }

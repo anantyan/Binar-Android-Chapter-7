@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import id.anantyan.moviesapp.model.ResultsItem
-import id.anantyan.moviesapp.repository.MoviesLocalRepository
+import id.anantyan.moviesapp.model.Movies
 import id.anantyan.moviesapp.repository.MoviesRemoteRepository
-import id.anantyan.utils.Constant
 import id.anantyan.utils.Resource
-import id.anantyan.utils.sharedPreferences.DataStoreManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,17 +17,17 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val remoteRepository: MoviesRemoteRepository
 ) : ViewModel() {
-    private val _trendingResponse: MutableLiveData<Resource<List<ResultsItem>>> = MutableLiveData()
-    private val _popularResponse: MutableLiveData<Resource<List<ResultsItem>>> = MutableLiveData()
-    private val _topRatedResponse: MutableLiveData<Resource<List<ResultsItem>>> = MutableLiveData()
-    private val _nowPlayingResponse: MutableLiveData<Resource<List<ResultsItem>>> = MutableLiveData()
-    private val _upcomingResponse: MutableLiveData<Resource<List<ResultsItem>>> = MutableLiveData()
+    private val _trendingResponse: MutableLiveData<Resource<Movies>> = MutableLiveData()
+    private val _popularResponse: MutableLiveData<Resource<Movies>> = MutableLiveData()
+    private val _topRatedResponse: MutableLiveData<Resource<Movies>> = MutableLiveData()
+    private val _nowPlayingResponse: MutableLiveData<Resource<Movies>> = MutableLiveData()
+    private val _upcomingResponse: MutableLiveData<Resource<Movies>> = MutableLiveData()
 
-    val trendingResponse: LiveData<Resource<List<ResultsItem>>> = _trendingResponse
-    val popularResponse: LiveData<Resource<List<ResultsItem>>> = _popularResponse
-    val topRatedResponse: LiveData<Resource<List<ResultsItem>>> = _topRatedResponse
-    val nowPlayingResponse: LiveData<Resource<List<ResultsItem>>> = _nowPlayingResponse
-    val upcomingResponse: LiveData<Resource<List<ResultsItem>>> = _upcomingResponse
+    val trendingResponse: LiveData<Resource<Movies>> = _trendingResponse
+    val popularResponse: LiveData<Resource<Movies>> = _popularResponse
+    val topRatedResponse: LiveData<Resource<Movies>> = _topRatedResponse
+    val nowPlayingResponse: LiveData<Resource<Movies>> = _nowPlayingResponse
+    val upcomingResponse: LiveData<Resource<Movies>> = _upcomingResponse
 
     fun getTrendingWeek() = CoroutineScope(Dispatchers.IO).launch {
         _trendingResponse.postValue(Resource.Loading())
@@ -39,7 +36,7 @@ class HomeViewModel @Inject constructor(
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
                     response.body()?.let {
-                        _trendingResponse.postValue(Resource.Success(it.results!!))
+                        _trendingResponse.postValue(Resource.Success(it))
                     }
                 }
             } else {
@@ -49,18 +46,18 @@ class HomeViewModel @Inject constructor(
             }
         } catch(ex: Exception) {
             ex.message?.let {
-                _trendingResponse.postValue(Resource.Error(it))
+                _trendingResponse.postValue(Resource.Error(code = null, message = it))
             }
         }
     }
     fun getPopular() = CoroutineScope(Dispatchers.IO).launch {
-        _popularResponse.postValue(Resource.Loading())
+       _popularResponse.postValue(Resource.Loading())
         try {
             val response = remoteRepository.popular()
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
                     response.body()?.let {
-                        _popularResponse.postValue(Resource.Success(it.results!!))
+                        _popularResponse.postValue(Resource.Success(it))
                     }
                 }
             } else {
@@ -71,11 +68,12 @@ class HomeViewModel @Inject constructor(
         } catch (ex: Exception) {
             withContext(Dispatchers.Main) {
                 ex.message?.let {
-                    _popularResponse.postValue(Resource.Error(it))
+                    _popularResponse.postValue(Resource.Error(code = null, message = it))
                 }
             }
         }
     }
+
     fun getTopRated() = CoroutineScope(Dispatchers.IO).launch {
         _topRatedResponse.postValue(Resource.Loading())
         try {
@@ -83,7 +81,7 @@ class HomeViewModel @Inject constructor(
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
                     response.body()?.let {
-                        _topRatedResponse.postValue(Resource.Success(it.results!!))
+                        _topRatedResponse.postValue(Resource.Success(it))
                     }
                 }
             } else {
@@ -94,7 +92,7 @@ class HomeViewModel @Inject constructor(
         } catch (ex: Exception) {
             withContext(Dispatchers.Main) {
                 ex.message?.let {
-                    _topRatedResponse.postValue(Resource.Error(it))
+                    _topRatedResponse.postValue(Resource.Error(code = null, message = it))
                 }
             }
         }
@@ -106,7 +104,7 @@ class HomeViewModel @Inject constructor(
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
                     response.body()?.let {
-                        _nowPlayingResponse.postValue(Resource.Success(it.results!!))
+                        _nowPlayingResponse.postValue(Resource.Success(it))
                     }
                 }
             } else {
@@ -117,7 +115,7 @@ class HomeViewModel @Inject constructor(
         } catch (ex: Exception) {
             withContext(Dispatchers.Main) {
                 ex.message?.let {
-                    _nowPlayingResponse.postValue(Resource.Error(it))
+                    _nowPlayingResponse.postValue(Resource.Error(code = null, message = it))
                 }
             }
         }
@@ -129,7 +127,7 @@ class HomeViewModel @Inject constructor(
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
                     response.body()?.let {
-                        _upcomingResponse.postValue(Resource.Success(it.results!!))
+                        _upcomingResponse.postValue(Resource.Success(it))
                     }
                 }
             } else {
@@ -140,7 +138,7 @@ class HomeViewModel @Inject constructor(
         } catch (ex: Exception) {
             withContext(Dispatchers.Main) {
                 ex.message?.let {
-                    _upcomingResponse.postValue(Resource.Error(it))
+                    _upcomingResponse.postValue(Resource.Error(code = null, message = it))
                 }
             }
         }
