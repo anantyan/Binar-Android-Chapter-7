@@ -1,8 +1,8 @@
 package id.anantyan.utils
 
 object Constant {
-    const val API_KEY = "5dac0ac545481b93bfa14c98910c4996"
-    const val API_KEY_UPLOAD = "b03f7e5a1d486ebfd0bea4b300451772"
+    const val API_KEY = "?"
+    const val API_KEY_UPLOAD = "?"
     const val BASE_IMAGE = "https://image.tmdb.org/t/p/w500/"
     const val BASE_URL = "https://api.themoviedb.org/3/"
     const val BASE_UPLOAD = "https://api.imgbb.com/1/"
